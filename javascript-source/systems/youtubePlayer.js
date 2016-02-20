@@ -361,6 +361,39 @@
         actionArg = args[1],
         videoRequest;
 
+		if (command.equalsIgnoreCase('songlist')) {
+			var slist = "Current Songqueue: ";
+			var i = 0;
+			// if songqueue is not empty, list songs!
+			if ($var.songqueue.length > 0) {
+				$var.songqueue.forEach(function(entry) {
+					if (i != -1) {
+						i = i +1;
+						if (i>20) {
+							i = -1;
+							$.say(slist);
+							$.say("and " + ($var.songqueue.length-20) + " more songs!");
+						}
+						else {
+							var substr = "(" + i + ") " + entry.song.getName() + " - requested by " + entry.user + " || ";
+							// split into multiple messages if it's too long
+							if ((slist.length + substr.length) > 490) {
+								$.say(slist.substring(0,slist.length-4));
+								slist = "";
+							}
+							slist = slist + substr;
+						}
+					}
+				});
+				slist = slist.substring(0, slist.length - 4);
+			}
+			// tell the viewers if it's empty
+			else {
+				slist = slist + " no song in queue at the moment! For more info on how to request songs type \"!songrequest\"";
+			}
+			$.say(slist);
+		}
+
     /**
      * @commandpath musicplayer - MAnage Youtbe Player settings
      */
